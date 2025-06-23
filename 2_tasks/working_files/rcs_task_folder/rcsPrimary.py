@@ -11,62 +11,58 @@ Primary script for HRB's dissertation project RCS
 This script does some set up for the experiment and calls all required scripts to run the risky decision-making and cognitive control tasks
 """
 
-def rcsPrimary(subID, isReal, computerNumber): # define the function and specify the argument(s)
+def rcsPrimary(subID, isReal, computerNumber, taskSet): # define the function and specify the argument(s) - see below
 
-    #isReal = 0 for testing, 1 for real
-    # computer numbers:
+    # defining the rcsPrimary function by specifying the argument(s): 
+    # --- subID: three-digit number with quotes (e.g., "000", "387", "999")
+    # --- isReal: 
+            # 0 - test 
+            # 1 - real
+    # --- computerNumber:
             # 1 - HB macbook
             # 2 - mahimahi
             # 3 - tofu
             # 4 - goulash
-            
-    #taskSet:
-        # 1: do all
-        # 2: do ospan and symspan only
-        # 1: do symspan only
+    # --- taskSet:
+            # 1 - do all tasks: risky monetary decision-making (rdm) and digit span (forward and backward)
+            # 2 - do working memory task only: digit span (forward and backward
     
     # let us know things are starting...
     print('starting study for participant', subID)    
 
-    
-    #import modules
+    # import modules
     import os
     import pandas as pd
-    #import sys
 
     # set working directory
-    if computerNumber ==1:
+    if computerNumber == 1:
         dirName = ("/Users/justinblake/Documents/GitHub/gpr/2_tasks/working_files/rcs_task_folder/")
         dataDirName = ("/Users/justinblake/Documents/GitHub/gpr/2_tasks/working_files/rcs_task_folder/rdmTask/data/")
-    elif computerNumber ==2:
+    elif computerNumber == 2:
         dirName = ("/Users/shlab/Documents/Github/rcs/task/")
         dataDirName = ("/Users/shlab/Documents/Github/rcs/task/data")
-    elif computerNumber ==3:
+    elif computerNumber == 3:
         dirName = ("/Users/Display/Desktop/Github/rcs/task/")
         dataDirName = ("/Users/Display/Desktop/rcsData/")
-    elif computerNumber ==4:
+    elif computerNumber == 4:
         dirName = ("/Users/sokolhessnerlab/Desktop/Github/rcs/task/")
         dataDirName =("/Users/sokolhessnerlab/Desktop/rcsData/")
-    
+    # change working directory
     os.chdir(dirName)
 
-    
-    # Import scripts
+    # Import Scripts for each Task
     from rdmTask.rcsRDMmodule import rcsRDM # risky decision-making task + condition instructions
-        
+    # import digit span file here
+    
     # r  d condition order from pre-existing text file which determines conditions and color for each round of RDM task
-    #conditionDF = pd.read_csv(dirName + "rdmTask/rcsConditions.csv", dtype={"subID":"string"}) # specify that subID is a string
-    conditionDF = pd.read_csv(dirName + "rdmTask/rcsConditions.csv", dtype={"gprID":"string"}) # specify that subID is a string
+    conditionDF = pd.read_csv(dirName + "rdmTask/rcsConditions.csv", dtype={"gprID":"string"}) # specify that gprID is a string
     
     # reading the csv file above does some weird stuff to the subID column, removing the extra characters:
-    #conditionDF.subID = conditionDF["subID"].str.replace("=","")
-    #conditionDF.subID = conditionDF["subID"].str.replace('"',"")
-    gprIdx = int(subID) % 25
+    gprIdx = int(subID) % 25 # shouldn't this be gprID?
+    
     # determine condition 1 and condition 2 (0=control, 1 = strategy) for participant
     cond1 = conditionDF.cond1.iloc[gprIdx]
     cond2 = conditionDF.cond2.iloc[gprIdx]
-    
-    # determine condition 1 and condition 2 (0=control, 1 = strategy) for participant
     cond3 = conditionDF.cond3.iloc[gprIdx]
     cond4 = conditionDF.cond4.iloc[gprIdx]
      
